@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { user } = require('./schema')
 
 const getMessage = ()=> {
     const data = fs.readFileSync('./src/assets/message.txt');
@@ -33,4 +34,10 @@ const saveMessage= async (data) => {
 
 }
 
-module.exports = {getMessage, saveMessage}
+const registerUser = async (data) => {
+    const userSchema = new user({...data});
+    const res = await userSchema.save();
+    return res;
+};
+
+module.exports = {getMessage, saveMessage, registerUser}
