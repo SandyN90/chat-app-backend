@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { getMessage, saveMessage, registerUser } = require('../components/helpers')
+const { getMessage, saveMessage, registerUser, loginUser } = require('../components/helpers')
 
 const app = express();
 
@@ -39,6 +39,20 @@ router.post('/register', async (req, res) => {
         } else {
             return res.status(500).json({ error: 'Internal server error' });
         }
+    }
+});
+
+router.post('/login', async (req, res) => {
+    try {
+        const { body } = req;
+        const userData = await loginUser(body);
+        if (userData.password === body.password) {
+            return res.status(201).json({ message: 'User Login successfully' });
+        } else {
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
+    } catch (error) {
+        return res.status(401).json({ message: 'Invalid username or password' });
     }
 });
 

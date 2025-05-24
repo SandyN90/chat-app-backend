@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { user } = require('./schema')
+const { User } = require('./schema')
 
 const getMessage = ()=> {
     const data = fs.readFileSync('./src/assets/message.txt');
@@ -35,9 +35,24 @@ const saveMessage= async (data) => {
 }
 
 const registerUser = async (data) => {
-    const userSchema = new user({...data});
+    const userSchema = new User({...data});
     const res = await userSchema.save();
     return res;
 };
 
-module.exports = {getMessage, saveMessage, registerUser}
+const loginUser = async (data) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let userData;
+    try {
+        if (emailRegex.test(data.email)) {
+            userData = await User.findOne({email: data.email});
+        }else {
+            userData = await User.findOne({username: data.username});
+        }
+        return userData;
+    }catch(error) {
+        return error;
+    }
+}
+
+module.exports = {getMessage, saveMessage, registerUser, loginUser}

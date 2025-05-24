@@ -15,5 +15,5 @@ const userSchema = new Schema({
     confirmPassword: {type: String, required: true}
 });
 
-const user = mongoose.model('User', userSchema)
-module.exports = { user };
+const User = mongoose.model('User', userSchema)
+module.exports = { User };
