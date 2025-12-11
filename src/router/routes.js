@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { getMessage, saveMessage, registerUser, loginUser } = require('../components/helpers')
+const { getMessage, saveMessage, registerUser, loginUser, updatePassword } = require('../components/helpers')
 
 const app = express();
 
@@ -55,5 +55,16 @@ router.post('/login', async (req, res) => {
         return res.status(401).json({ message: 'Invalid username or password' });
     }
 });
+
+router.patch('/reset-password', async (req, res)=> {
+    try {
+        const {email, password} = req.body;
+        await updatePassword(email, password);
+        res.status(200).json({message: 'Password updated successfully'});
+    }catch(error) {
+        return res.status(500).json({message: 'Internal server error'});
+    }
+})
+
 
 module.exports = router;

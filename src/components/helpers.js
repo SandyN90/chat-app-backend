@@ -55,4 +55,13 @@ const loginUser = async (data) => {
     }
 }
 
-module.exports = {getMessage, saveMessage, registerUser, loginUser}
+const updatePassword = async (email, password) => {
+    try {
+        const userdata = await User.updateOne({email}, {$set: {password}});
+        return userdata;
+    }catch(error) {
+        return error;
+    }
+}
+
+module.exports = {getMessage, saveMessage, registerUser, loginUser, updatePassword}
