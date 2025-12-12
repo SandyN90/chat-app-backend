@@ -1,33 +1,33 @@
 const fs = require('fs');
 const { User } = require('./schema')
 
-const getMessage = ()=> {
+const getMessage = () => {
     const data = fs.readFileSync('./src/assets/message.txt');
     console.log("data", atob(data.toString()));
     return data.toString();
 }
 
-const saveMessage= async (data) => {
+const saveMessage = async (data) => {
     let encodedMsg = data;;
 
-    try{
+    try {
         const savedFile = fs.readFileSync('./src/assets/message.txt');
         let savedData = savedFile.toString();
-        if(savedData.length){
+        if (savedData.length) {
             savedData = JSON.parse(atob(savedData));
-            
+
             const [key, value] = Object.entries(encodedMsg)[0];
 
             savedData[key] = value;
             encodedMsg = btoa(JSON.stringify(savedData));
-        }else{
+        } else {
             encodedMsg = btoa(JSON.stringify(encodedMsg));
         }
 
         fs.writeFileSync('./src/assets/message.txt', encodedMsg);
 
         return true;
-    }catch(err) {
+    } catch (err) {
         console.log(err)
         return false;
     }
@@ -35,7 +35,7 @@ const saveMessage= async (data) => {
 }
 
 const registerUser = async (data) => {
-    const userSchema = new User({...data});
+    const userSchema = new User({ ...data });
     const res = await userSchema.save();
     return res;
 };
@@ -45,23 +45,32 @@ const loginUser = async (data) => {
     let userData;
     try {
         if (emailRegex.test(data.email)) {
-            userData = await User.findOne({email: data.email});
-        }else {
-            userData = await User.findOne({username: data.username});
+            userData = await User.findOne({ email: data.email });
+        } else {
+            userData = await User.findOne({ username: data.username });
         }
         return userData;
-    }catch(error) {
+    } catch (error) {
+        return error;
+    }
+}
+
+const validateEmail = async (email) => {
+    try {
+        const isVerified = await User.findOne({ email });
+        return isVerified;
+    } catch (error) {
         return error;
     }
 }
 
 const updatePassword = async (email, password) => {
     try {
-        const userdata = await User.updateOne({email}, {$set: {password}});
+        const userdata = await User.updateOne({ email }, { $set: { password } });
         return userdata;
-    }catch(error) {
+    } catch (error) {
         return error;
     }
 }
 
-module.exports = {getMessage, saveMessage, registerUser, loginUser, updatePassword}
+module.exports = { getMessage, saveMessage, registerUser, loginUser, updatePassword, validateEmail }
