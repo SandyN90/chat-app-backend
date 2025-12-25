@@ -36,7 +36,6 @@ app.use(express.json());
 
 const middleware = (to, from, next) => {
     if (to.path === '/') {
-        console.log("Hi this is path /");
         next()
     }
     next();
@@ -50,7 +49,6 @@ io.on('connection', function (socket) {
     let msg = 'hi', user2Msg;
 
     socket.on('send', (value) => {
-        console.log("🚀 ~ file: main.js:37 ~ socket.on ~ value:", value)
         msg = value;
         const message = {
             message: value.message,

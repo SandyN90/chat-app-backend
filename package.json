@@ -2,7 +2,9 @@
     "name": "chatapp-backend",
     "private": true,
     "version": "0.0.0",
-    "scripts": {},
+    "scripts": {
+        "dev": "node ./main.js"
+    },
     "dependencies": {
         "body-parser": "^1.20.2",
         "cors": "^2.8.5",
